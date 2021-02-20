@@ -1,10 +1,11 @@
 # line-chat-app
 
-
 # Run
 ```
 go run main.go
 ```
 
-# lisen on server
+# listen on server go
 http://localhost:3000
+
+# 
