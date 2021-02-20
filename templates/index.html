@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    #app {
+        background: linear-gradient( 45deg ,#103469, #ffffff);
+            width: 100vw;
+            height: 100vh;
+        flex-direction: column;
+       
+        display: flex;
+        justify-items: center;
+        align-items: center;
+    }
+    </style>
+    <div id="app">
+        <ul v-for="message in messages">
+            <li v-text="message"></li>
+        </ul>
+        <form action="/chat" method="POST" v-on:submit.prevent="postMessage" style=" display: flex; justify-content: center; align-items: center">
+        <input type="text" name="message" v-model="message">
+        <input type="submit" value="Send" >
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+    <script>
+        var client = new EventSource("http://localhost:3000/chat");
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            name: '',
+            message: '',
+            messages: [],
+        },
+        methods: {
+            postMessage() {
+                axios.post("http://localhost:3000/message", vue.message).then((response) => {
+
+               vue.message = '';
+            });
+        }
+        },
+        created: function () {
+            client.onmessage = function (msg) {
+                vue.messages.push(msg.data);
+ 
+            }
+        }
+    });
+    </script>
+</body>
+</html>
